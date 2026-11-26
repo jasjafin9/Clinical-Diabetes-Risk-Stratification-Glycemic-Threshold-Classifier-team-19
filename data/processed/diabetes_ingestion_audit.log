@@ -1,0 +1,16 @@
+DIABETES DATA INGESTION AUDIT
+Generated: 2026-11-26 11:59:08
+Input file: data/raw/diabetes_prediction_dataset.csv
+Valid records: 99991
+Rejected records: 9
+
+REJECTED RECORD DETAILS
+CSV line 4553: bmi=88.72 outside [10, 80]
+CSV line 22456: bmi=87.51 outside [10, 80]
+CSV line 24188: bmi=83.74 outside [10, 80]
+CSV line 69551: bmi=91.82 outside [10, 80]
+CSV line 71487: bmi=81.73 outside [10, 80]
+CSV line 76095: bmi=95.22 outside [10, 80]
+CSV line 87845: bmi=95.69 outside [10, 80]
+CSV line 90045: bmi=87.7 outside [10, 80]
+CSV line 96068: bmi=88.76 outside [10, 80]

@@ -144,57 +144,86 @@ print("Youden's J:", round(best_youden, 4))
 
 # Q11: VIOLIN PLOTS AND CORRELATION HEATMAP
 
+
+# Q11: Biomarker Distribution Violin Plots
+
+
+# Q11: Biomarker Distribution Violin Plots
+
+# Create diagnosis labels
 df["Diagnosis"] = df["diabetes"].map({
     0: "Non-diabetic",
     1: "Diabetic"
 })
 
-fig, axes = plt.subplots(
-    1, 2,
-    figsize=(14, 6)
-)
+# Define consistent colours
+colors = {
+    "Non-diabetic": "steelblue",
+    "Diabetic": "darkorange"
+}
 
+# Create side-by-side violin plots
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+# HbA1c distribution
 sns.violinplot(
     data=df,
     x="Diagnosis",
     y="HbA1c_level",
     hue="Diagnosis",
-    ax=axes[0],
+    palette=colors,
     inner="quartile",
-    legend=False
+    cut=0,
+    dodge=False,
+    ax=axes[0]
 )
 
-axes[0].set_title(
-    "HbA1c Distribution by Diabetes Status"
-)
+axes[0].set_title("HbA1c Distribution by Diabetes Status")
 axes[0].set_xlabel("Diagnosis")
 axes[0].set_ylabel("HbA1c Level")
 
+# Remove legend (category names are already on X-axis)
+if axes[0].get_legend():
+    axes[0].get_legend().remove()
+
+
+# Blood glucose distribution
 sns.violinplot(
     data=df,
     x="Diagnosis",
     y="blood_glucose_level",
     hue="Diagnosis",
-    ax=axes[1],
+    palette=colors,
     inner="quartile",
-    legend=False
+    cut=0,
+    dodge=False,
+    ax=axes[1]
 )
 
-axes[1].set_title(
-    "Blood Glucose Distribution by Diabetes Status"
-)
-
+axes[1].set_title("Blood Glucose Distribution by Diabetes Status")
 axes[1].set_xlabel("Diagnosis")
 axes[1].set_ylabel("Blood Glucose Level")
-plt.tight_layout()
-plt.savefig(
-    FIGURE_FOLDER + "/distribution_regimes.png",
-    dpi=300
-)
-plt.close()
-print("Q11 violin plots created successfully!")
 
-# Q11: ANNOTATED CORRELATION HEATMAP
+if axes[1].get_legend():
+    axes[1].get_legend().remove()
+
+
+# Remove unnecessary borders
+sns.despine(ax=axes[0])
+sns.despine(ax=axes[1])
+
+plt.tight_layout()
+
+plt.savefig(
+    os.path.join(FIGURE_FOLDER, "distribution_regimes.png"),
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()
+
+
+# Q11: Annotated Correlation Heatmap
 
 correlation_columns = [
     "age",
@@ -206,36 +235,39 @@ correlation_columns = [
     "diabetes"
 ]
 
-correlation_data = df[
-    correlation_columns
-].corr(numeric_only=True)
+# Calculate correlation matrix
+correlation_matrix = df[correlation_columns].corr()
 
-plt.figure(figsize=(11, 8))
+# Create heatmap
+fig, ax = plt.subplots(figsize=(10, 8))
 
 sns.heatmap(
-    correlation_data,
+    correlation_matrix,
     annot=True,
     fmt=".2f",
     cmap="coolwarm",
     linewidths=0.5,
     vmin=-1,
-    vmax=1
+    vmax=1,
+    square=True,
+    ax=ax
 )
 
-plt.title(
-    "Correlation Heatmap of Clinical Variables"
-)
+ax.set_title("Correlation Heatmap of Clinical Features")
+
+sns.despine(ax=ax)
 
 plt.tight_layout()
 
 plt.savefig(
-    FIGURE_FOLDER + "/correlation_heatmap.png",
-    dpi=300
+    os.path.join(FIGURE_FOLDER, "correlation_heatmap.png"),
+    dpi=300,
+    bbox_inches="tight"
 )
 
 plt.close()
 
-print("Q11 correlation heatmap created successfully!")
+print("\nQ11: Violin plots and correlation heatmap generated.")
 
 
 # Q12: INTERACTIVE 3D DASHBOARD(HTML)
